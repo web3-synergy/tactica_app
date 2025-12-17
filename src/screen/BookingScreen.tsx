@@ -17,10 +17,9 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, runTransaction, addDoc, serverTimestamp} from "firebase/firestore";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { doc, getDoc, runTransaction } from "firebase/firestore";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { db, auth } from "../config/firebase"; // <- adjust path if your config lives elsewhere
@@ -47,8 +46,14 @@ const [enabled, setEnabled] = useState(false);
 const [discountedPrice, setDiscountedPrice] = useState(market?.price ?? 0);
 const [discountPercent, setDiscountPercent] = useState(0);
 const [totalToPay, setTotalToPay] = useState(market?.price || 0);
+const [successVisible, setSuccessVisible] = useState(false);
   const toggleAnim = useState(new Animated.Value(0))[0]; // animation for knob
-
+  useEffect(() => {
+    if (market?.price != null) {
+      setDiscountedPrice(market.price);
+      setTotalToPay(market.price);
+    }
+  }, [market]);
   const toggleSwitch = async () => {
     const newState = !enabled;
     setEnabled(newState);
@@ -58,6 +63,7 @@ const [totalToPay, setTotalToPay] = useState(market?.price || 0);
     } else {
       setDiscountedPrice(market?.price ?? 0);
       setDiscountPercent(0);
+      setTotalToPay(market?.price ?? 0);
     }
   
     Animated.timing(toggleAnim, {
@@ -204,6 +210,24 @@ if (data.status !== "active" || expireAt < now) {
         schedules[s].times[t] = slotObj;
         tx.update(ref, { schedules });
       });
+      try {
+        // create a flattened BookedGames entry (so Game screen can query easily)
+        await addDoc(collection(db, "BookedGames"), {
+          marketId: market.id,
+          userId,
+          date: scheduleDate.toISOString(),     // scheduleDate computed earlier
+          time: selectedTimeValue,
+          stadium: market.stadium ?? null, // only use stadium name, leave null if missing
+          address: market.address ?? null, 
+          price: market.price ?? null,
+          status: "booked",
+          createdAt: serverTimestamp(),
+          slotKey: `${s}:${t}`, // optional: reference to schedule/time indices
+        });
+      } catch (err) {
+        console.warn("Could not create BookedGames doc:", err);
+      }
+      
 
       // update local UI instantly
       setLocalSchedules((prev) =>
@@ -221,9 +245,9 @@ if (data.status !== "active" || expireAt < now) {
         })
       );
 
-      Alert.alert("Booked!", "Your booking was successful.");
+      setSuccessVisible(true);
       // go back or navigate to a success screen
-      navigation.goBack();
+      
     } catch (err) {
       console.error("Booking error:", err);
       if (err.message === "AlreadyBooked") {
@@ -264,7 +288,7 @@ if (data.status !== "active" || expireAt < now) {
       
     {/* Top header with back button and centered title */}
 <View style={styles.headerTop}>
-  <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+  <TouchableOpacity onPress={() => navigation.goBack()}>
     <Ionicons name="arrow-back" size={28} color="#111" />
   </TouchableOpacity>
   <Text style={styles.up}>Información del partido</Text>
@@ -551,6 +575,82 @@ if (data.status !== "active" || expireAt < now) {
         </TouchableOpacity>
       ))}
     </ScrollView>
+  </View>
+</Modal>
+<Modal visible={successVisible} transparent animationType="slide">
+  <View style={styles.successOverlay}>
+  <TouchableOpacity
+      style={styles.topOverlays}
+      onPress={() => setSuccessVisible(false)}
+      activeOpacity={0.7}
+    >
+      <Text style={styles.topX}>✕</Text>
+      </TouchableOpacity>
+
+    <View style={styles.successSheet}>
+
+      {/* Top Section */}
+      <View style={styles.successTop}>
+        
+        <View style={styles.successCheckWrap}>
+        <Image source={require("../assets/green.png")}  />
+        </View>
+
+        <Text style={styles.successTitle}>Reserva Completada!</Text>
+
+        {/* Close icon top right */}
+        <TouchableOpacity
+          style={styles.successCloseBtn}
+          onPress={() => {
+            setSuccessVisible(false);
+            navigation.goBack();
+          }}
+        >
+          <View style={styles.successCloseDot}></View>
+        </TouchableOpacity>
+      </View>
+
+      {/* Details */}
+      <View style={styles.successDetails}>
+        
+        {/* Name */}
+        <View style={styles.successRow}>
+          <View style={styles.iconBox}>
+          <Image source={require("../assets/Person.png")} style={styles.Icon} />
+          </View>
+          <Text style={styles.successRowText}>Javier Mora</Text>
+        </View>
+
+        {/* Stadium */}
+        <View style={styles.successRow}>
+          <View style={styles.iconBox}>
+          <Image source={require("../assets/Pin.png")} style={styles.Icon} />
+          </View>
+          <Text style={styles.successRowText}>{market.stadium}</Text>
+        </View>
+
+        {/* Date */}
+        <View style={styles.successRow}>
+          <View style={styles.iconBox}>
+          <Image source={require("../assets/Clock.png")} style={styles.Icon} />
+          </View>
+          <Text style={styles.successRowText}>{formattedScheduleDate} | {selectedTimeValue ?? ""}</Text>
+        </View>
+
+      </View>
+
+      {/* Button */}
+      <TouchableOpacity
+        style={styles.successButton}
+        onPress={() => {
+          setSuccessVisible(false);
+          navigation.goBack();
+        }}
+      >
+        <Text style={styles.successButtonText}>Ir al Inicio</Text>
+      </TouchableOpacity>
+
+    </View>
   </View>
 </Modal>
 </View>
@@ -1029,5 +1129,126 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     position: "absolute",
     top: 2,
+  },
+  successOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "flex-end",
+  },
+  
+  successSheet: {
+    width: "100%",
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingBottom: 40,
+  },
+  
+  successTop: {
+    alignItems: "center",
+    paddingTop: 32,
+    paddingBottom: 12,
+    position: "relative",
+  },
+  
+  successCheckWrap: {
+    padding: 12.5,
+    borderRadius: 999,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  
+  successCheckInner: {
+    width: 25,
+    height: 25,
+    backgroundColor: "#00983E",
+    borderRadius: 4,
+  },
+  
+  successTitle: {
+    fontSize: 22,
+    fontWeight: "600",
+    fontFamily: "Montserrat",
+    color: "#000",
+    marginTop: 12,
+  },
+  
+  successCloseBtn: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+    padding: 12,
+  },
+  
+  successCloseDot: {
+    width: 10.5,
+    height: 10.5,
+    borderRadius: 999,
+    borderWidth: 1.5,
+    borderColor: "#fff",
+  },
+  
+  successDetails: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  
+  successRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 6,
+    paddingHorizontal: 13,
+    borderRadius: 100,
+    gap: 8,
+  },
+  
+  
+  
+  iconStadium: {
+    width: 7,
+    height: 16,
+    backgroundColor: "#2F2E2F",
+  },
+  
+  iconCalendar: {
+    width: 16,
+    height: 16,
+    backgroundColor: "#2F2E2F",
+  },
+  
+  successRowText: {
+    fontSize: 17,
+    fontFamily: "Montserrat",
+    fontWeight: "400",
+    color: "#000",
+  },
+  
+  successButton: {
+    marginTop: 30,
+    marginHorizontal: 16,
+    height: 42,
+    borderRadius: 6,
+    backgroundColor: "#242424",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  
+  successButtonText: {
+    color: "#fff",
+    fontSize: 17,
+    fontWeight: "500",
+    fontFamily: "Montserrat",
+  },
+  topOverlays: {
+    position: "absolute",
+    bottom: 400, 
+    alignSelf: "center",
+    width: 40,
+    height: 40,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
   },
 });

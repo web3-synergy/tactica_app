@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
+import {  Eye, EyeOff } from "lucide-react-native";
+
 
 export default function Login({ navigation }: any) {
   const [email, setEmail] = useState("");
@@ -27,7 +29,7 @@ export default function Login({ navigation }: any) {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       Alert.alert("Success", `Logged in as ${user.email}`);
-      navigation.replace("Main"); // or wherever your main screen is
+      
     } catch (error: any) {
       console.error("Login error:", error);
       Alert.alert("Login Failed", error.message);
@@ -80,13 +82,18 @@ export default function Login({ navigation }: any) {
     onChangeText={setPassword}
   />
 
-  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-    <Image
-      source={require("../assets/eye.png")}
-      style={styles.eyeIcon}
-    />
+<TouchableOpacity
+    onPress={() => setShowPassword(!showPassword)}
+    hitSlop={10}
+  >
+    {showPassword ? (
+      <EyeOff size={18} color="#7B7878" />
+    ) : (
+      <Eye size={18} color="#7B7878" />
+    )}
   </TouchableOpacity>
 </View>
+
       {/* Login button */}
       <TouchableOpacity
   style={[
@@ -148,22 +155,33 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "100%",
-    minHeight: 42,
+    height: 42, // Fixed height = same on Android + iOS
     backgroundColor: "#FFF",
     borderColor: "#636B70",
     borderWidth: 0.6,
     borderRadius: 6,
     paddingHorizontal: 12,
-    paddingVertical: 6,
     flexDirection: "row",
-    gap: 10,
     alignItems: "center",
+    justifyContent: "space-between",
   },
   input: {
+    flex: 1,
     fontSize: 16,
     fontWeight: "500",
     color: "#000",
-    
+    paddingVertical: 0, // VERY IMPORTANT for Android
+  },
+  socialIcon: {
+    width: 20,
+    height: 20,
+    resizeMode: "contain",
+  },
+  eyeIcon: {
+    width: 20,
+    height: 20,
+    tintColor: "#7B7878",
+    resizeMode: "contain",
   },
   loginButton: {
     width: 361,

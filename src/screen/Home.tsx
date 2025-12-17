@@ -13,6 +13,7 @@ import * as Location from "expo-location";
 import { db, auth } from "../config/firebase";
 import { collection, getDocs, doc, runTransaction } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 const MAX_USERS = 15;
@@ -28,8 +29,6 @@ export default function HomeScreen() {
   const [markets, setMarkets] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const navigation = useNavigation();
-  const textColor = isDark ? "#fff" : "#000";
-const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
   const loggedUser = auth.currentUser?.uid;
 
   // GET USER LOCATION
@@ -41,6 +40,19 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
       setUserLocation(location.coords);
     })();
   }, []);
+ 
+  const getCategoryColor = (category?: string) => {
+    if (!category) return "#9CA3AF";
+  
+    switch (category.toLowerCase()) {
+      case "Versus":
+        return "rgba(145, 81, 228, 1)";
+      case "individual":
+        return "rgba(33, 144, 255, 1)";
+      default:
+        return "rgba(145, 81, 228, 1)";
+    }
+  };
 
   const getDistanceKm = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
@@ -147,6 +159,7 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
       alert(err);
     }
   };
+  
   const hasDataForDay = (day) => {
     return markets.some(m =>
       m.schedules.some(s => {
@@ -167,14 +180,19 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
   ).getDate();
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? "rgba(14, 24, 40, 1)" : "" }]}>
-      <Text style={styles.title}>Markets</Text>
-
+    <View style={[styles.container, ]}>
+      <View style={styles.header}>
+              <Text style={styles.titles}>Proximos Partidos</Text>
+              <TouchableOpacity style={styles.editBtn}>
+                <Text style={styles.editText}>Todos</Text>
+                <Icon name="arrow-drop-down" size={20} color="white" />
+              </TouchableOpacity>
+            </View>
       {/* FIXED CALENDAR */}
       <View
   style={[
     styles.fixedCalendar,
-    { backgroundColor: isDark ? "transparent" : "rgba(69,69,69,1)" }
+    
   ]}
 >
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingLeft: 16 }}>
@@ -184,8 +202,8 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
   style={[
     styles.monthText,
     selectedDay.getMonth() === i
-      ? { fontWeight: "700", color: theme === "dark" ? "#fff" : "#fff" }
-      : { color: theme === "dark" ? "#aaa" : "#ccc" }
+      ? { fontWeight: "700", color: "rgba(209, 209, 209, 1)" }   
+      : { color: "rgba(159, 162, 175, 1)" }                     
   ]}
 >
   {m}
@@ -217,7 +235,7 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
         style={[
           styles.dayCell,
           isSelected && {
-            backgroundColor: isDark ? "rgba(194, 212, 48, 1)" : "#000",
+            backgroundColor:  "#000",
           },
           !hasData && { opacity: 0.3 },
         ]}
@@ -226,8 +244,8 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
         <Text
           style={[
             styles.dayText,
-            isSelected && { color: isDark ? "#000" : "#fff", fontWeight: "700" },
-            !hasData && { color: "#999" },
+            isSelected && { color: "#fff", fontWeight: "700" },
+            !hasData && { color: "#999" }
           ]}
         >
           {day}
@@ -256,19 +274,19 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
   key={m.id}
   style={{
     ...styles.card,
-    backgroundColor: isDark ? "rgba(100,107,128,0.2)" : "#fff",
-    borderColor: isDark ? "rgba(100,107,128,1)" : "#ccc",
+    backgroundColor: "#fff",
+    borderColor: "#ccc",
   }}
 >
               {todaySchedules.map((s, si) => (
                 <View key={si} style={{ marginBottom: 12 }}>
                   <View style={styles.dateRow}>
-                    <Text style={[styles.dateText, { color: textColor }]}>{new Date(s.date).toLocaleDateString("es-ES", { day: "2-digit", month: "long", year: "numeric" })}</Text>
+                    <Text style={[styles.dateText, ]}>{new Date(s.date).toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })}</Text>
                     <View style={styles.formatoTitle}>
-                    <Text style={[{ color: textColor }]}>Formato</Text>
+                    
                     <View style={styles.formatBox}>
                       
-                      <Text style={styles.formatText}>Versus</Text>
+                      <Text style={styles.formatText}>{m.numberOfPlayers}</Text>
                     </View>
                     </View>
                   </View>
@@ -278,18 +296,18 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
                     <Image source={m.image ? { uri: m.image } : require("../assets/email.png")} style={styles.image} />
                     <View style={styles.infoText}>
                     <View style={styles.titleRow}>
-  <Text style={[styles.title, { color: textColor }]}>{m.address}</Text>
+  <Text style={[styles.title, ]}>{m.address}</Text>
 
   <View style={styles.iconPlaceholder}>
     <Image
       source={require("../assets/location.png")}
       style={styles.followIcon}
     />
-    <Text style={[styles.distanceText, { color: textColor }]}>{m.distanceKm ?? "N/A"} km</Text>
+    <Text style={[styles.distanceText, ]}>{m.distanceKm ?? "2"} km</Text>
   </View>
 </View>
                       <View style={styles.subRow}>
-                        <Text style={[styles.addressText, { color: textColor }]}>{m.neighborhood}</Text>
+                        <Text style={[styles.addressText,]}>{m.neighborhood}</Text>
                         {m.distanceKm && <Text style={styles.distanceText}>{m.distanceKm} km</Text>}
                       </View>
                     </View>
@@ -302,10 +320,10 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
   {s.times.map((t, ti) => (
     <View key={ti} style={styles.timeSlot}>
       {/* Cupos on top */}
-      <Text style={[styles.cuposText,  { color: textColor }]}>{t.bookedUsers.length}/{MAX_USERS}</Text>
+      <Text style={[styles.cuposText,  ]}>Cupos{t.bookedUsers.length}/{MAX_USERS}</Text>
       {/* Time */}
       <View style={styles.timeBox}>
-      <Text style={[styles.timeText,  { color: textColor }]}>{t.time}</Text>
+      <Text style={[styles.timeText,  ]}>{t.time}</Text>
       </View>
     </View>
   ))}
@@ -317,16 +335,18 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
   {/* Left: Format & Price */}
   <View style={styles.leftColumn}>
     <View style={styles.Column}>
-      <Text style={[styles.formatLabel,  { color: textColor }]}>Precio</Text>
-      <Text style={styles.formatValue}>{m.category}</Text>
+      <Text style={[styles.formatLabel,  ]}>Formato</Text>
+      <Text style={[styles.formatValue, { color: getCategoryColor(m.category) }]}>
+  {m.category}
+</Text>
     </View>
-    <Text style={[styles.priceText,  { color: textColor }]}>${m.price} cupos</Text>
+    <Text style={[styles.priceText,  ]}>${m.price} cupos</Text>
   </View>
 
   {/* Middle: Time */}
   <View style={styles.middleColumn}>
-    <Text style={[styles.timeLabel,  { color: textColor }]}>Tiempo</Text>
-    <Text style={[styles.timeValue,  { color: textColor }]}>1H 30min</Text>
+    <Text style={[styles.timeLabel,  ]}>Tiempo</Text>
+    <Text style={[styles.timeValue,  ]}>1H 30min</Text>
   </View>
 
   {/* Right: ONLY THIS IS A BUTTON */}
@@ -337,7 +357,7 @@ const secondaryTextColor = isDark ? "#ccc" : "#7B7878";
         scheduleIndex: si,
       })
     }
-    style={[styles.ingresarButton, { backgroundColor: isDark ? "rgba(194, 212, 48, 1)" : "rgba(209, 209, 209, 1)",}]}
+    style={[styles.ingresarButton, { backgroundColor: "rgba(209, 209, 209, 1)",}]}
   >
     <Text style={[styles.actionText, ]} >Ingresar</Text>
   </TouchableOpacity>
@@ -364,14 +384,14 @@ const styles = StyleSheet.create({
   
   weekdaysRow: { flexDirection: "row", justifyContent: "space-between", marginHorizontal: 20, marginTop: 8 },
   weekdayText: { width: 40, textAlign: "center", color: "#999" },
-  dayCell: { width: 40, height: 40, backgroundColor: "rgba(255,255,255,0.05)", marginTop: 20, borderRadius: 8, alignItems: "center", justifyContent: "center", marginRight: 8 },
+  dayCell: { width: 40, height: 40, backgroundColor: "rgba(255,255,255,0.05)", marginTop: 20, borderRadius: 8, alignItems: "center", justifyContent: "center", marginRight: 8, },
   selectedDayCell: { backgroundColor: "#000" },
   dayText: { color: "#000" },
   selectedDayText: { color: "#fff", fontWeight: "700" },
   marketScroll: { width: "100%", marginTop: 10 },
 
   /* CARD STYLES */
-  card: { width: 362,height: "auto", backgroundColor: "#fff", borderRadius: 8, padding: 8, marginBottom: 18, alignSelf: "center", shadowColor: "#000", shadowOpacity: 0.08, shadowOffset: { width: 0, height: 4 }, shadowRadius: 4, elevation: 2 },
+  card: { width: 362,height: 234, backgroundColor: "#fff", borderRadius: 8, padding: 8, marginBottom: 12, alignSelf: "center", shadowColor: "rgba(0, 0, 0, 0.08)", shadowOpacity: 0.08, shadowOffset: { width: 0, height: 4 }, shadowRadius: 4, elevation: 2 },
   dateRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 6 },
   dateText: { color: "black", fontSize: 14, fontWeight: "500" },
   formatBox: { paddingHorizontal: 4,  borderRadius: 4, borderWidth: 0.6, borderColor: "#7B7878", justifyContent: "center", alignItems: "center" },
@@ -423,7 +443,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 2,
   },
-  formatLabel: { fontSize: 12, fontWeight: "700", color: "#000" },
+  formatLabel: { fontSize: 12, fontWeight: "700", color: "#000", fontFamily:  "Montserrat_500Medium" },
   formatValue: { fontSize: 12, fontWeight: "500", color: "#2190FF" },
   priceText: { fontSize: 14, fontWeight: "600", color: "#000", marginTop: 2 },
   
@@ -454,12 +474,12 @@ const styles = StyleSheet.create({
   },
   timeBox: {
     paddingVertical: 2,
-    paddingHorizontal: 4,
+    paddingHorizontal: 12,
     borderRadius: 4,
     justifyContent: "center",
     alignItems: "center",
     
-    height: 30,
+    height: 24,
    
     borderWidth: 1,
   borderColor: "rgba(0,0,0,1)",
@@ -476,7 +496,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 6,
     borderRadius: 10,
-    
+    marginTop: 12,
   },
   
   ingresarButton: {
@@ -488,5 +508,17 @@ const styles = StyleSheet.create({
   formatoTitle: {
     flexDirection: "row",
     gap: 6,
-  }
+  },
+  header: {
+    width: "100%",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    
+  },
+  titles: { color: "#24281B", fontSize: 22, fontWeight: "700" },
+  editBtn: { paddingHorizontal: 10, paddingVertical: 6, backgroundColor: "black", borderRadius: 4 , flexDirection: "row"},
+  editText: { color: "white", fontSize: 14, fontWeight: "500" },
 });

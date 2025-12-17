@@ -89,7 +89,7 @@ await setDoc(doc(db, "users", user.uid), {
 });
 
 alert("Cuenta creada!");
-navigation.replace("Main");
+
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -401,6 +401,7 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   back: {gap: 6},
+  
   inputContainer: {
     width: "90%",
     minHeight: 48,
@@ -409,10 +410,9 @@ const styles = StyleSheet.create({
     borderWidth: 0.6,
     borderRadius: 6,
     paddingHorizontal: 12,
-    paddingVertical: 10,
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    justifyContent: "space-between", 
   },
   input: {
     flex: 1,

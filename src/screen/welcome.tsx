@@ -70,7 +70,7 @@ export default function Welcome({ navigation }) {
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.btnOutline}
-            onPress={() => navigation.replace("Login")}
+            onPress={() => navigation.navigate("Login")}
           >
             <Text style={styles.btnOutlineText}>Ingresar</Text>
           </TouchableOpacity>
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 1,
     backgroundColor: "rgba(0, 0, 0, 1)",
-    marginHorizontal: 10,
+    marginHorizontal: 15,
   },
   
   registerText: {
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 6,
+    
   },
   socialIcon: {
     width: 24,
@@ -275,6 +275,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "flex-end",
+    marginLeft: 12,
     marginRight: 35,
     
   },

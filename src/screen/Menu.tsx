@@ -5,36 +5,46 @@ import {
   StyleSheet,
   Animated,
   TouchableOpacity,
-  Dimensions,
   Pressable,
   Image,
+  Dimensions,
 } from "react-native";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
 
-const { width } = Dimensions.get("window");
+const MENU_WIDTH = 280;
 
 export default function Menu({ visible, onClose, onSignOut }) {
-  const slideAnim = useRef(new Animated.Value(width)).current; 
+  const slideAnim = useRef(new Animated.Value(MENU_WIDTH)).current; 
   const handleSignOut = async () => {
-    await auth().signOut(); // or your Firebase logout
+    try {
+      await signOut(auth);
+      console.log("Logged out");
+    } catch (err) {
+      console.log("Sign-out error:", err);
+    }
   };
 
   useEffect(() => {
-    Animated.timing(slideAnim, {
-      toValue: visible ? 0 : width, // Move into view (0), out (width)
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
+    slideAnim.setValue(visible ? 0 : MENU_WIDTH);
   }, [visible]);
 
-  if (!visible) return null; // Prevent overlay from blocking touches when closed
+  
+  if (!visible) return null;
 
   return (
     <View style={styles.overlay}>
-      {/* OUTSIDE AREA CLOSES MENU */}
+      
       <Pressable style={styles.backdrop} onPress={onClose} />
 
-      {/* SLIDING PANEL */}
-      <Animated.View style={[styles.menuContainer, { right: slideAnim }]}>
+      
+      <Animated.View
+  style={[
+    styles.menuContainer,
+    { transform: [{ translateX: slideAnim }] }, // positive = moves right, 0 = visible
+  ]}
+  
+>
         <View style={styles.header}>
           
           <Image
@@ -67,7 +77,7 @@ export default function Menu({ visible, onClose, onSignOut }) {
               />
               <Text style={{ color: "rgba(255, 255, 255, 1)", fontSize: 14, fontWeight: "400",}}>Terminos y Condiciones</Text>
           </View>
-          <TouchableOpacity style={styles.support} onPress={onSignOut}>
+          <TouchableOpacity style={styles.support} onPress={handleSignOut}>
   <Image
     source={require("../assets/exit.png")}
     style={styles.supportIcon}
@@ -105,13 +115,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.7)", // dim background
   },
   menuContainer: {
-    
-    width: 280,
+    width: MENU_WIDTH,
     backgroundColor: "rgba(36,36,36,1)",
     padding: 20,
     height: "100%",
-    position: "absolute",
-    top: 0,
   },
   header: {
     flexDirection: "row",

@@ -15,7 +15,7 @@ export default function Splash({ navigation }: any) {
 
     const timeout = setTimeout(() => {
       navigation.replace("Welcome"); 
-    }, 5000);
+    }, 3600);
 
     return () => clearTimeout(timeout);
   }, []);
