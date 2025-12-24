@@ -7,29 +7,27 @@ import {
   Image,
   Linking,
 } from "react-native";
-
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import * as Facebook from "expo-auth-session/providers/facebook";
-
 import { auth } from "../config/firebase";
 import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   signInWithCredential,
 } from "firebase/auth";
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from "expo-status-bar";
+import { LinearGradient } from "expo-linear-gradient";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Welcome({ navigation }) {
-  // ------------------ GOOGLE ------------------
-  const [googleRequest, googleResponse, googlePrompt] =
-    Google.useAuthRequest({
-      expoClientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-      iosClientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-      androidClientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-    });
+  // Google Auth
+  const [googleRequest, googleResponse, googlePrompt] = Google.useAuthRequest({
+    expoClientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+    iosClientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+    androidClientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+  });
 
   useEffect(() => {
     if (googleResponse?.type === "success") {
@@ -41,7 +39,7 @@ export default function Welcome({ navigation }) {
     }
   }, [googleResponse]);
 
-  // ------------------ FACEBOOK ------------------
+  // Facebook Auth
   const [fbRequest, fbResponse, fbPrompt] = Facebook.useAuthRequest({
     clientId: "YOUR_FACEBOOK_APP_ID",
   });
@@ -58,65 +56,72 @@ export default function Welcome({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Logo */}
-      <Image source={require("../assets/logo4.png")} style={styles.logoIcon} />
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
+      <LinearGradient
+        colors={["#0E1828", "#040506"]} 
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={StyleSheet.absoluteFillObject}
+      >
+        <View style={styles.content}>
+          {/* Logo */}
+          <Image
+            source={require("../assets/logo6.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
 
-      
+          {/* Main Action Buttons */}
+          <View style={styles.actionButtons}>
+            <TouchableOpacity
+              style={[styles.button, styles.loginButton]}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <Text style={styles.buttonText}>Ingresar</Text>
+            </TouchableOpacity>
 
-      {/* Buttons */}
-      <View style={styles.buttons}>
-        {/* Login / Signup */}
-        <View style={styles.row}>
-          <TouchableOpacity
-            style={styles.btnOutline}
-            onPress={() => navigation.navigate("Login")}
-          >
-            <Text style={styles.btnOutlineText}>Ingresar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.signupButton]}
+              onPress={() => navigation.navigate("Signup")}
+            >
+              <Text style={styles.buttonTexts}>Crear Cuenta</Text>
+            </TouchableOpacity>
+          </View>
 
-          <TouchableOpacity
-            style={styles.btnSolid}
-            onPress={() => navigation.navigate("Signup")}
-          >
-            <Text style={styles.btnSolidText}>Crear Cuenta</Text>
-          </TouchableOpacity>
-        </View>
+          {/* Or Divider */}
+          <View style={styles.dividerContainer}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>Registrarse con</Text>
+            <View style={styles.dividerLine} />
+          </View>
 
-        {/* Divider */}
-        <View style={styles.dividerContainer}>
-          <View style={styles.line} />
-          <Text style={styles.registerText}>Registrarse con</Text>
-          <View style={styles.line} />
-        </View>
+          {/* Social Buttons */}
+          <View style={styles.socialButtons}>
+            <TouchableOpacity
+              style={[styles.socialButton, styles.googleButton]}
+              onPress={() => googlePrompt()}
+            >
+              <Image
+                source={require("../assets/google.png")}
+                style={styles.socialIcon}
+              />
+              <Text style={styles.socialText}> Google</Text>
+            </TouchableOpacity>
 
-        {/* Social Buttons */}
-        <View style={styles.socialRow}>
-          <TouchableOpacity
-            style={styles.socialButton}
-            onPress={() => googlePrompt()}
-          >
-            <Image
-              source={require("../assets/google.png")}
-              style={styles.socialIcon}
-            />
-            <Text style={styles.socialText}>Google</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.socialButton, styles.facebookButton]}
+              onPress={() => fbPrompt()}
+            >
+              <Image
+                source={require("../assets/facebook.png")}
+                style={styles.socialIcon}
+              />
+              <Text style={styles.socialText}>Facebook</Text>
+            </TouchableOpacity>
+          </View>
 
-          <TouchableOpacity
-            style={styles.socialButton}
-            onPress={() => fbPrompt()}
-          >
-            <Image
-              source={require("../assets/facebook.png")}
-              style={styles.socialIcon}
-            />
-            <Text style={styles.socialText}>Facebook</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Footer */}
-        <View style={styles.condition}>
+          {/* Footer */}
+          <View style={styles.condition}>
           <Text style={styles.term}>Términos & Condiciones</Text>
 
           <View style={styles.follow}>
@@ -128,7 +133,7 @@ export default function Welcome({ navigation }) {
                 style={styles.socialColumn}
               >
                 <Image
-                  source={require("../assets/instagram.png")}
+                  source={require("../assets/instagram1.png")}
                   style={styles.followIcon}
                 />
               </TouchableOpacity>
@@ -138,14 +143,15 @@ export default function Welcome({ navigation }) {
                 style={styles.socialColumn}
               >
                 <Image
-                  source={require("../assets/tiktok.png")}
+                  source={require("../assets/tiktok1.png")}
                   style={styles.followIcon}
                 />
               </TouchableOpacity>
             </View>
           </View>
+          </View>
         </View>
-      </View>
+      </LinearGradient>
     </View>
   );
 }
@@ -153,138 +159,130 @@ export default function Welcome({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingVertical: 80,
   },
-  header: {
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 24,
+  },
+  logo: {
+    
+    marginBottom: 80,
+  },
+  actionButtons: {
+    width: "100%",
+    maxWidth: 360,
+    marginBottom: 32,
     flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 100,
+    gap: 24,
   },
-  logoBox: {
-    width: 40,
-    height: 40,
-    borderRadius: 6,
-    backgroundColor: "#0E1828",
-    position: "relative",
-  },
-  logoSquare: { ...StyleSheet.absoluteFillObject },
-  logoShape: { position: "absolute", backgroundColor: "#909090" },
-  logoText: {
-    color: "#909090",
-    fontSize: 34,
-    fontWeight: "700",
-  },
-  textSection: {
-    alignItems: "center",
-    marginTop: 50,
-    marginBottom: 100,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "500",
-    color: "#000",
-    lineHeight: 36,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#7A7A7A",
-    lineHeight: 24,
-  },
-  buttons: {
-    width: "90%",
-    marginTop: 89,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 24,
-  },
-  btnOutline: {
+  button: {
     width: 160,
     height: 42,
-    backgroundColor: "#FFF",
-    borderColor: "#000",
-    borderWidth: 1,
     borderRadius: 6,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
   },
-  btnSolid: {
-    width: 160,
-    height: 42,
-    backgroundColor: "#7A7A7A",
-    borderRadius: 6,
-    paddingVertical: 12,
-    alignItems: "center",
+  loginButton: {
+    backgroundColor: "#C2D430", // Professional green
   },
-  btnOutlineText: {
-    color: "#000",
+  signupButton: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#C2D430",
+  },
+  buttonText: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
+    color: "#0A1328",
   },
-  btnSolidText: {
-    color: "#FFF",
+  buttonTexts: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
+    color: "rgba(194, 212, 48, 1)",
   },
   dividerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 20,
     width: "100%",
+    maxWidth: 360,
+    marginBottom: 24,
   },
-  
-  line: {
+  dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: "rgba(0, 0, 0, 1)",
-    marginHorizontal: 15,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
   },
-  
-  registerText: {
+  dividerText: {
+    color: "rgba(255, 255, 255, 0.7)",
     fontSize: 14,
-    color: "rgba(0, 0, 0, 1)",
-    fontWeight: "500",
+    marginHorizontal: 16,
   },
-  socialRow: {
+  socialButtons: {
+    width: "100%",
+    maxWidth: 360,
+    marginBottom: 48,
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: 24,
   },
   socialButton: {
-    flex: 1,
-    width: 168.5,
-    height: 46,
-    backgroundColor: "#E3EEF3",
-    borderRadius: 6,
-    paddingVertical: 11,
-    marginHorizontal: 6,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    width: 168.5,
+    height: 42,
+    borderRadius: 6,
+    marginBottom: 12,
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    borderWidth: 1,
     
   },
+  
   socialIcon: {
     width: 24,
     height: 24,
-    resizeMode: "contain",
-    display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "flex-end",
-    marginLeft: 12,
-    marginRight: 35,
-    
+    marginRight: 12,
   },
   socialText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#000",
-    paddingRight: 30,
-    
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#0A1328",
+  },
+  footer: {
+    position: "absolute",
+    bottom: 40,
+    alignItems: "center",
+    width: "100%",
+    flexDirection: "row",
+    gap: 24,
+  },
+  termText: {
+    fontSize: 13,
+    color: "rgba(255, 255, 255, 0.7)",
+    textAlign: "center",
+    marginBottom: 24,
+  },
+  linkText: {
+    color: "#C2D430",
+    fontWeight: "600",
+  },
+  followContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 5,
+  },
+
+  
+  socialFollowIcon: {
+    width: 32,
+    height: 32,
   },
   condition: {
     display: "flex",
@@ -292,7 +290,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 80,
-    marginTop: 200,
+    marginTop: 100,
   },
   follow: {
     display: "flex",
@@ -300,7 +298,7 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   term: {
-    color: "rgba(0, 0, 0, 1)",
+    color: "rgba(255, 255, 255, 1)",
     fontSize: 14,
     fontWeight: "500",
     lineHeight: 20,
@@ -311,8 +309,8 @@ const styles = StyleSheet.create({
   },
   logoIcon: {
     marginTop: 100.5,
+  },
+  followTitle: {
+    color: "rgba(255, 255, 255, 1)",
   }
-  
-  
-
 });

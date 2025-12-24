@@ -13,6 +13,7 @@ import { collection, query, where, orderBy, onSnapshot, getDocs } from "firebase
 import { db, auth } from "../config/firebase";  
 import { useNavigation } from "@react-navigation/native";  
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const MAX_USERS = 15;
 
@@ -80,15 +81,17 @@ export default function Game() {
     const bookedCount = item.bookedUsers?.length ?? 1;
     return ( 
       <View style={styles.upTime}>
+        
        
         <View style={styles.dateContainers}> 
         <Image
                     source={require("../assets/emoji.png")} 
-                    style={{ width: 20, height: 20 }}
+                    style={{ width: 20, height: 20, tintColor: "rgba(255, 255, 255, 1)" }}
                   />
        
             <Text style={styles.dateText}>{dateStr}</Text>  
           </View>
+          <View style={styles.divider} />
       
       <View style={styles.card}> 
        
@@ -97,6 +100,7 @@ export default function Game() {
           <View style={styles.dateContainer}>  
             <Text style={styles.dateText}>{dateStr}</Text>  
           </View>  
+          <Text style={{color: "rgba(255, 255, 255, 1)"}}>Formato</Text>
           <View style={styles.formatBox}>  
             <Text style={styles.formatText}>5 vs 5</Text>  
           </View>  
@@ -115,7 +119,7 @@ export default function Game() {
                  
               <Image
                     source={require("../assets/location.png")} 
-                    style={{ width: 16, height: 16 }}
+                    style={{ width: 16, height: 16, tintColor: "rgba(255, 255, 255, 1)" }}
                   />
                 <Text style={styles.distance}>{item.distanceKm ?? "2km"}</Text>  
               </View>  
@@ -131,20 +135,22 @@ export default function Game() {
             </View>  
           </View>  
         </View> 
-        <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
-    {/* Booked Slots */}
-    <View
+        
+
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center",  gap: 6 }}>
+  {/* Left Column: Tiempo */}
+  <View
     style={{
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "flex-start",
       gap: 8,
-      marginBottom: 8,
+      
     }}
   >
     {/* Booked Slots */}
     <View
-      style={{ width: 55, justifyContent: "center", alignItems: "center" }}
+      style={{ width: 75, justifyContent: "center", alignItems: "center" }}
     >
       <Text
         style={{
@@ -153,9 +159,10 @@ export default function Game() {
           fontWeight: "500",
           lineHeight: 14,
           textAlign: "center",
+          color: "rgba(255, 255, 255, 1)",
         }}
       >
-        <Text style={{ color: "#E83F53" }}>{bookedCount}</Text>/{MAX_USERS}
+        <Text style={{ color: "rgba(255, 185, 88, 1)" }}>{bookedCount}</Text>/{MAX_USERS} Cupos
       </Text>
     </View>
 
@@ -164,17 +171,17 @@ export default function Game() {
       style={{
         paddingHorizontal: 4,
         paddingVertical: 2,
-        backgroundColor: "#C8C8C8",
+        backgroundColor: "transparent",
         borderRadius: 4,
         borderWidth: 1,
-        borderColor: "black",
+        borderColor: "rgba(194, 212, 48, 1)",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
       <Text
         style={{
-          color: "black",
+          color: "rgba(194, 212, 48, 1)",
           fontSize: 12,
           fontFamily: "Montserrat",
           fontWeight: "500",
@@ -186,34 +193,31 @@ export default function Game() {
       </Text>
     </View>
   </View>
-  </View>
-        
-
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 6, gap: 6 }}>
-  {/* Left Column: Tiempo */}
   <View style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: 6,  }}>
     <View style={{ justifyContent: "center", alignItems: "center", gap: 6 }}>
       <View style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: 2 }}>
         <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "flex-start", gap: 6 }}>
-          <Text style={{ color: "black", fontSize: 12, fontFamily: "Montserrat", fontWeight: "700", lineHeight: 16, letterSpacing: 0.24 }}>
+          <Text style={{ color: "rgba(255, 255, 255, 1)", fontSize: 12, fontFamily: "Montserrat", fontWeight: "700", lineHeight: 16, letterSpacing: 0.24 }}>
           Tiempo
           </Text>
         </View>
       </View>
     </View>
-    <Text style={{ color: "black", fontSize: 12, fontFamily: "Montserrat", fontWeight: "400", lineHeight: 16, letterSpacing: 0.24 }}>
+    <Text style={{ color: "rgba(255, 255, 255, 1)", fontSize: 12, fontFamily: "Montserrat", fontWeight: "400", lineHeight: 16, letterSpacing: 0.24 }}>
       1H 30min
     </Text>
   </View>
 
   {/* Right Column: Confirmado */}
-  <View style={{ paddingHorizontal: 9, paddingVertical: 4, backgroundColor: "#D1D1D1", borderRadius: 4, justifyContent: "center", alignItems: "center",}}>
-    <Text style={{ color: "black", fontSize: 14, fontFamily: "Montserrat", fontWeight: "500", lineHeight: 20, textAlign: "center" }}>
-      Confirmado
+  <View style={{ paddingHorizontal: 9, paddingVertical: 4, backgroundColor: "rgba(194, 212, 48, 1)", borderRadius: 4, justifyContent: "center", alignItems: "center",flexDirection: "row", gap: 4,}}>
+    <Image source={require("../assets/fill.png")} style={styles.suIcon} />
+    <Text style={{ color: "rgba(14, 24, 40, 1)", fontSize: 14, fontFamily: "Montserrat", fontWeight: "500", lineHeight: 20, textAlign: "center" }}>
+    Listo
     </Text>
   </View>
 </View>
       </View>  
+      
       </View> 
     );  
   };  
@@ -239,6 +243,12 @@ export default function Game() {
 
   return (  
     <View style={{ flex: 1 }}>  
+     <LinearGradient
+                        colors={["#0E1828", "#040506"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                        style={styles.gradient}
+                      >
       {/* Fixed header at top */}  
       <View style={styles.header}>  
         <Text style={styles.headerTitle}>Mis Juegos</Text>  
@@ -255,6 +265,7 @@ export default function Game() {
         contentContainerStyle={{ padding: 16, paddingTop: 0 }}  
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}  
       />  
+      </LinearGradient>
     </View>  
   );  
 }  
@@ -277,13 +288,13 @@ const styles = StyleSheet.create({
     
    
   },  
-  headerTitle: { fontSize: 22, fontWeight: "700", color: "#24281B" },  
+  headerTitle: { fontSize: 22, fontWeight: "700", color: "rgba(255, 255, 255, 1)" },  
   headerButton: {  
     minHeight: 28,  
     width: 66,
     paddingVertical: 5,  
     paddingHorizontal: 6,  
-    backgroundColor: "black",  
+    backgroundColor: "rgba(100, 107, 128, 0.2)",  
     borderRadius: 4,  
     justifyContent: "center",  
     alignItems: "center",
@@ -291,37 +302,39 @@ const styles = StyleSheet.create({
   },  
   headerButtonText: { fontSize: 14, fontWeight: "500", color: "white" },  
 
-  card: {  
-    width: "100%",  
-    padding: 8,  
-    backgroundColor: "white",  
-    borderRadius: 8,  
-    shadowColor: "#000",  
-    shadowOpacity: 0.08,  
-    shadowOffset: { width: 0, height: 4 },  
-    shadowRadius: 4,  
-    elevation: 2,  
-    flexDirection: "column",  
-    gap: 4,  
-    marginBottom: 12,  
-    
-  },  
+  card: {
+    width: 362,
+    alignSelf: "center",                   
+    padding: 8,
+    backgroundColor: "rgba(100, 107, 128, 0.2)",
+    borderRadius: 8,
+    borderColor: "rgba(100, 107, 128, 1)",
+    borderWidth: 0.4,
+    shadowColor: "rgba(0, 0, 0, 0.08)",
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 4,
+    elevation: 2,
+    flexDirection: "column",
+    gap: 4,
+    marginBottom: 12,
+  },
   row: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 6 },  
   dateContainer: { flex: 1, justifyContent: "center",  },  
-  dateText: { fontSize: 16, fontWeight: "500", fontFamily: "Montserrat_500Medium", color: "#000" },  
-  formatBox: { paddingHorizontal: 4, paddingVertical: 2, borderWidth: 0.6, borderColor: "#7B7878", borderRadius: 4, justifyContent: "center", alignItems: "center" },  
-  formatText: { fontSize: 14, fontWeight: "500", color: "#000" },  
+  dateText: { fontSize: 16, fontWeight: "500", fontFamily: "Montserrat_500Medium", color: "rgba(255, 255, 255, 1)" },  
+  formatBox: { paddingHorizontal: 4, paddingVertical: 2, borderWidth: 0.6, borderColor: "rgba(250, 211, 1, 1)", borderRadius: 4, justifyContent: "center", alignItems: "center" },  
+  formatText: { fontSize: 14, fontWeight: "500", color: "rgba(250, 211, 1, 1)" },  
 
   rowMarket: { flexDirection: "row", alignItems: "center", width: "100%", paddingVertical: 6, gap: 6 },  
   image: { width: 40, height: 40, borderRadius: 5, backgroundColor: "#D9D9D9" },  
   marketInfo: { flex: 1, flexDirection: "column", gap: 4 },  
   titleRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },  
-  title: { fontSize: 16, fontWeight: "600", color: "#262626" },  
+  title: { fontSize: 16, fontWeight: "600", color: "rgba(255, 255, 255, 1)" },  
   locationBox: { flexDirection: "column", alignItems: "center", gap: 4 },  
   locationIcon: { width: 12, height: 16, },  
-  distance: { fontSize: 12, color: "#7B7878" },  
+  distance: { fontSize: 12, color: "rgba(255, 255, 255, 1)" },  
   addressRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },  
-  address: { fontSize: 12, color: "#7B7878" },  
+  address: { fontSize: 12, color: "rgba(255, 255, 255, 1)" },  
   infoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -350,4 +363,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     },
     dateContainers: {  gap: 4, flexDirection: "row", },
-});  
+    divider: {
+      height: 1,
+      backgroundColor: "rgba(194, 212, 48, 1)",
+      width: "100%",
+    }
+});

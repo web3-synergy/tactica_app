@@ -13,6 +13,7 @@ import {
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import {  Eye, EyeOff } from "lucide-react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function Login({ navigation }: any) {
@@ -20,6 +21,9 @@ export default function Login({ navigation }: any) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+  const isDisabled = loading || !email || !password;
 
   const handleLogin = async () => {
     if (!email || !password) return Alert.alert("Error", "Please fill all fields");
@@ -39,7 +43,11 @@ export default function Login({ navigation }: any) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#000" }}>
+         <LinearGradient
+        colors={['#0E1828', '#040506']} 
+        style={{ flex: 1 }}
+      >
   <ScrollView 
     contentContainerStyle={styles.container}
     keyboardShouldPersistTaps="handled"
@@ -53,21 +61,34 @@ export default function Login({ navigation }: any) {
       <Text style={styles.title}>Inicio de Sesión</Text>
 
       {/* Email input */}
-      <View style={styles.inputContainer}>
-        <Image source={require("../assets/email.png")} style={styles.socialIcon} />
-        <TextInput
-          placeholder="myemail@email.com"
-          placeholderTextColor="#7B7878"
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-      </View>
+      <View
+  style={[
+    styles.inputContainer,
+    { borderColor: isFocused ? "rgba(194, 212, 48, 1)" : "rgba(99, 107, 112, 1)" },
+  ]}
+>
+  <Image
+    source={require("../assets/email.png")}
+    style={styles.socialIcon}
+  />
+  <TextInput
+    placeholder="myemail@email.com"
+    placeholderTextColor="#7B7878"
+    style={styles.input}
+    value={email}
+    onChangeText={setEmail}
+    keyboardType="email-address"
+    autoCapitalize="none"
+    onFocus={() => setIsFocused(true)}
+    onBlur={() => setIsFocused(false)}
+  />
+</View>
 
       {/* Password input */}
-      <View style={styles.inputContainer}>
+      <View style={[
+    styles.inputContainer,
+    { borderColor: passwordFocused ? "rgba(194, 212, 48, 1)" : "rgba(99, 107, 112, 1)" },
+  ]}>
   <Image
     source={require("../assets/password.png")}
     style={styles.socialIcon}
@@ -80,25 +101,45 @@ export default function Login({ navigation }: any) {
     style={[styles.input, { flex: 1 }]}
     value={password}
     onChangeText={setPassword}
+    onFocus={() => setPasswordFocused(true)}
+    onBlur={() => setPasswordFocused(false)}
   />
 
 <TouchableOpacity
-    onPress={() => setShowPassword(!showPassword)}
-    hitSlop={10}
-  >
-    {showPassword ? (
-      <EyeOff size={18} color="#7B7878" />
-    ) : (
-      <Eye size={18} color="#7B7878" />
-    )}
-  </TouchableOpacity>
+  onPress={() => setShowPassword(!showPassword)}
+  hitSlop={10}
+>
+  {showPassword ? (
+    <EyeOff
+      size={18}
+      color={
+        passwordFocused
+          ? "rgba(194, 212, 48, 1)"
+          : "rgba(192, 192, 192, 1)"
+      }
+    />
+  ) : (
+    <Eye
+      size={18}
+      color={
+        passwordFocused
+          ? "rgba(194, 212, 48, 1)"
+          : "rgba(192, 192, 192, 1)"
+      }
+    />
+  )}
+</TouchableOpacity>
 </View>
 
       {/* Login button */}
       <TouchableOpacity
   style={[
     styles.loginButton,
-    (loading || !email || !password) && { opacity: 0.2 },
+    {
+      backgroundColor: isDisabled
+        ? "rgba(99, 107, 112, 0.4)" // disabled color
+        : "rgba(194, 212, 48, 1)",  // active color
+    },
   ]}
   onPress={handleLogin}
   disabled={loading || !email || !password}
@@ -110,6 +151,7 @@ export default function Login({ navigation }: any) {
 
 
 </ScrollView> 
+</LinearGradient>
     </SafeAreaView>
   );
 }
@@ -118,7 +160,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    backgroundColor: "#FFF",
+    backgroundColor: "transparent",
     
     alignItems: "center",
     gap: 24,
@@ -140,7 +182,7 @@ const styles = StyleSheet.create({
   logoSquare: { ...StyleSheet.absoluteFillObject },
   logoShape: { position: "absolute", backgroundColor: "#909090" },
   logoText: {
-    color: "rgba(144, 144, 144, 1)",
+    color: "rgba(194, 212, 48, 1)",
     fontSize: 40,
     fontWeight: "700",
     fontFamily: "agressive",
@@ -150,13 +192,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "500",
-    color: "#000",
+    color: "rgba(255, 255, 255, 1)",
     textAlign: "center",
   },
   inputContainer: {
     width: "100%",
     height: 42, // Fixed height = same on Android + iOS
-    backgroundColor: "#FFF",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderColor: "#636B70",
     borderWidth: 0.6,
     borderRadius: 6,
@@ -169,7 +211,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: "500",
-    color: "#000",
+    color: "rgba(255, 255, 255, 1)",
     paddingVertical: 0, // VERY IMPORTANT for Android
   },
   socialIcon: {
@@ -184,16 +226,16 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   loginButton: {
-    width: 361,
+    width: "100%",
     height: 42,
-    backgroundColor: "#7A7A7A",
+    backgroundColor: "rgba(194, 212, 48, 1)",
     borderRadius: 6,
     paddingVertical: 12,
     alignItems: "center",
     marginTop: 100,
   },
   loginText: {
-    color: "#FFF",
+    color: "rgba(14, 24, 40, 1)",
     fontSize: 16,
     fontWeight: "600",
   },

@@ -22,6 +22,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { LinearGradient } from 'expo-linear-gradient';
 import { db, auth } from "../config/firebase"; // <- adjust path if your config lives elsewhere
 
 const MAX_USERS = 15;
@@ -265,8 +266,8 @@ if (data.status !== "active" || expireAt < now) {
   if (loading || !market) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" />
-        <StatusBar style="dark" />
+        <ActivityIndicator size="large" color="rgba(194, 212, 48, 1)" />
+        
       </View>
     );
   }
@@ -284,12 +285,18 @@ if (data.status !== "active" || expireAt < now) {
       
   return (
     <View style={styles.container}>
-      <StatusBar style="dark" />
+      <LinearGradient
+                      colors={["#0E1828", "#040506"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 0, y: 1 }}
+                      
+                      style={StyleSheet.absoluteFillObject}
+                    >
       
     {/* Top header with back button and centered title */}
 <View style={styles.headerTop}>
   <TouchableOpacity onPress={() => navigation.goBack()}>
-    <Ionicons name="arrow-back" size={28} color="#111" />
+    <Ionicons name="arrow-back" size={28} color="#fff" />
   </TouchableOpacity>
   <Text style={styles.up}>Información del partido</Text>
   <View style={{ width: 28 }} />
@@ -314,8 +321,8 @@ if (data.status !== "active" || expireAt < now) {
 {/* Info Row */}
 <View style={styles.infoRow}>
   <View style={styles.infoItem}>
-    <Image source={require("../assets/femedal.png")} style={styles.infoIcon} />
-    <Text style={styles.infoText}>{market.category ?? "Individual"}</Text>
+    <Image source={require("../assets/femedal.png")} style={styles.infoIcons} />
+    <Text style={styles.infoTexts}>{market.category ?? "Individual"}</Text>
   </View>
   <View style={styles.infoItem}>
     <Image source={require("../assets/soccers.png")} style={styles.infoIcon} />
@@ -341,7 +348,7 @@ if (data.status !== "active" || expireAt < now) {
 </View>
 <Text style={styles.address}>{market.address }</Text>
 <Text style={styles.address}>
-  <Text style={{ fontWeight: "700" }}>Precio: </Text>
+  <Text style={{ fontWeight: "700", color: "rgba(255, 255, 255, 1)" }}>Precio: </Text>
   {market.price}.00 Cop x Persona
 </Text>
 
@@ -360,7 +367,7 @@ if (data.status !== "active" || expireAt < now) {
             {/* schedule date */}
             
             <Text style={styles.timetext}>Selecciona Hora de juego</Text>
-            <View style={{backgroundColor: "rgba(238, 238, 238, 1)"}}>
+            <View style={{backgroundColor: "transparent"}}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: 16, paddingVertical: 12 }}>
   {s.times.map((t, ti) => {
     const bookedCount = (t.bookedUsers || []).length;
@@ -371,7 +378,7 @@ if (data.status !== "active" || expireAt < now) {
     return (
       <View key={ti} style={{ flexDirection: "column", alignItems: "center", marginRight: 16 }}>
         {/* Booked count */}
-        <Text style={{ fontSize: 12, fontWeight: "500", color: "rgba(104, 104, 104, 1)" }}>
+        <Text style={{ fontSize: 12, fontWeight: "500", color: "rgba(255, 255, 255, 1)" }}>
           Cupos <Text style={{ color: "#E83F53" }}>{bookedCount}</Text>/{MAX_USERS}
         </Text>
 
@@ -382,9 +389,9 @@ if (data.status !== "active" || expireAt < now) {
             paddingHorizontal: 8,
             paddingVertical: 4,
             borderRadius: 4,
-            backgroundColor: selected ? "#111" : "transparent",
+            backgroundColor: selected ? "rgba(194, 212, 48, 1)" : "transparent",
             borderWidth: 1,
-            borderColor: "#000",
+            borderColor:  selected ? "" : "rgba(255, 255, 255, 1)",
             justifyContent: "center",
             alignItems: "center",
             minWidth: 60,
@@ -392,7 +399,7 @@ if (data.status !== "active" || expireAt < now) {
           onPress={() => handleSelectTime(t.time, selKey)}
           activeOpacity={0.8}
         >
-          <Text style={{ color: selected ? "#fff" : "#000", fontSize: 12, fontWeight: "500" }}>
+          <Text style={{ color: selected ? "rgba(14, 24, 40, 1)" : "rgba(255, 255, 255, 1)", fontSize: 12, fontWeight: "500" }}>
             {t.time}
           </Text>
         </TouchableOpacity>
@@ -593,7 +600,7 @@ if (data.status !== "active" || expireAt < now) {
       <View style={styles.successTop}>
         
         <View style={styles.successCheckWrap}>
-        <Image source={require("../assets/green.png")}  />
+        <Image source={require("../assets/green2.png")} style={styles.suIcon} />
         </View>
 
         <Text style={styles.successTitle}>Reserva Completada!</Text>
@@ -653,13 +660,14 @@ if (data.status !== "active" || expireAt < now) {
     </View>
   </View>
 </Modal>
+</LinearGradient>
 </View>
   );
 }
 
 const styles = StyleSheet.create({
-  loader: { flex: 1, justifyContent: "center", alignItems: "center" },
-  container: { flex: 1, backgroundColor: "#fff" },
+  loader: { flex: 1, justifyContent: "center", alignItems: "center", },
+  container: { flex: 1,  },
   
   infoRow: {
     flexDirection: "row",
@@ -667,27 +675,42 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 8,
+    backgroundColor: "rgba(100, 107, 128, 0.2)",
   },
   infoItem: { flex: 1, alignItems: "center", justifyContent: "center", },
-  infoLabel: { fontSize: 12, color: "#666" },
-  infoValue: { fontSize: 14, fontWeight: "600", color: "#111" },
+  infoLabel: { fontSize: 12, color: "rgba(255, 255, 255, 1)" },
+  infoValue: { fontSize: 14, fontWeight: "600", color: "rgba(255, 255, 255, 1)" },
   infoIcon: {
     width: 28,
     height: 28,
     marginBottom: 4,
     resizeMode: "contain",
+    tintColor: "rgba(255, 255, 255, 1)",
   },
   infoText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#111",
+    color: "rgba(255, 255, 255, 1)",
+    textAlign: "center",
+  },
+  infoIcons: {
+    width: 28,
+    height: 28,
+    marginBottom: 4,
+    resizeMode: "contain",
+    tintColor: "rgba(250, 211, 1, 1)",
+  },
+  infoTexts: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "rgba(250, 211, 1, 1)",
     textAlign: "center",
   },
   description: {
     paddingHorizontal: 16,
     paddingBottom: 12,
   },
-  descriptionText: { color: "#666" },
+  descriptionText: { color: "rgba(255, 255, 255, 1)" },
 
   sectionHeader: { paddingHorizontal: 16, paddingVertical: 8 },
   sectionTitle: { fontSize: 16, fontWeight: "700" },
@@ -745,12 +768,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 0,
     marginTop: 45,
-    backgroundColor: "#fff", 
+    backgroundColor: "transparent", 
   },
   up: {
     fontSize: 22,
     fontWeight: "700",
-    color: "rgba(36, 40, 27, 1)",
+    color: "rgba(255, 255, 255, 1)",
     lineHeight: 39,
     textAlign: "center",
     flex: 1,
@@ -792,7 +815,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 16,
     paddingBottom: 12,
-    color: "rgba(0, 0, 0, 1)",
+    color: "rgba(255, 255, 255, 1)",
   },
   timetext: {
     alignItems: "center",
@@ -800,7 +823,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 16,
     paddingBottom: 12,
-    color: "rgba(0, 0, 0, 1)",
+    color: "rgba(255, 255, 255, 1)",
     fontWeight: "600",
     fontSize: 20,
     marginTop: 130,
@@ -811,7 +834,7 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingBottom: 36,
     paddingHorizontal: 16,
-    backgroundColor: '#242424',
+    backgroundColor: 'rgba(14, 24, 40, 1)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     flexDirection: 'row',
@@ -867,7 +890,7 @@ const styles = StyleSheet.create({
     minHeight: 28,
     paddingHorizontal: 12,
     paddingVertical: 5,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(194, 212, 48, 1)',
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
@@ -888,7 +911,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     width: "100%",
     height: 660,            
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(14, 24, 40, 1)",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
@@ -908,14 +931,14 @@ const styles = StyleSheet.create({
   modalHeaderText: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#111",
+    color: "rgba(255, 255, 255, 1)",
     fontFamily: "Montserrat_600SemiBold",
   },
   
   fieldLabel: {
     fontSize: 18,
     fontWeight: "600",
-    color: "rgba(0, 0, 0, 1)",
+    color: "rgba(255, 255, 255, 1)",
     marginBottom: 4,
     fontFamily: "Montserrat_600SemiBold",
   },
@@ -924,26 +947,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#f9f9f9",
+    
+    backgroundColor: "rgba(100, 107, 128, 0.2)",
     flexDirection: "row",
     alignItems: "center",
   },
   fieldValue: {
     fontSize: 17,
-    color: "rgba(0, 0, 0, 1)",
+    color: "rgba(255, 255, 255, 1)",
     fontFamily: "Montserrat_400Regular",
     flexShrink: 1,
   },
   reserveBtn: {
     marginTop: 2,
-    backgroundColor: "#111",
+    backgroundColor: "rgba(194, 212, 48, 1)",
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: "center",
   },
   reserveBtnText: {
-    color: "#fff",
+    color: "rgba(14, 24, 40, 1)",
     fontSize: 16,
     fontWeight: "700",
   },
@@ -977,9 +1000,10 @@ const styles = StyleSheet.create({
     height: 18,
     resizeMode: "contain",
     marginRight: 8, 
+    tintColor: "rgba(100, 107, 128, 1)",
   },
   dropdownContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(100, 107, 128, 0.2)",
     padding: 16,
     borderRadius: 12,
     maxHeight: 300, 
@@ -1042,7 +1066,7 @@ const styles = StyleSheet.create({
   
   couponLabel: {
     fontSize: 17,
-    color: "rgba(0, 0, 0, 1)",
+    color: "rgba(255, 255, 255, 1)",
     fontFamily: "Montserrat_400Regular",
     flexShrink: 1,
   },
@@ -1052,8 +1076,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#f9f9f9",
+    
+    backgroundColor: "rgba(100, 107, 128, 0.2)",
     flexDirection: "row",
     alignItems: "center",
   },
@@ -1110,7 +1134,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "500",
     fontFamily: "Montserrat",
-    color: "#000",
+    color: "rgba(255, 255, 255, 1)",
   },
   toggle: {
     width: 44,
@@ -1138,7 +1162,7 @@ const styles = StyleSheet.create({
   
   successSheet: {
     width: "100%",
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(14, 24, 40, 1.0)",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingBottom: 40,
@@ -1169,7 +1193,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "600",
     fontFamily: "Montserrat",
-    color: "#000",
+    color: "rgba(255, 255, 255, 1)",
     marginTop: 12,
   },
   
@@ -1180,13 +1204,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   
-  successCloseDot: {
-    width: 10.5,
-    height: 10.5,
-    borderRadius: 999,
-    borderWidth: 1.5,
-    borderColor: "#fff",
-  },
+  
   
   successDetails: {
     paddingHorizontal: 16,
@@ -1220,7 +1238,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: "Montserrat",
     fontWeight: "400",
-    color: "#000",
+    color: "rgba(255, 255, 255, 1)",
   },
   
   successButton: {
@@ -1228,13 +1246,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     height: 42,
     borderRadius: 6,
-    backgroundColor: "#242424",
+    backgroundColor: "rgba(194, 212, 48, 1)",
     justifyContent: "center",
     alignItems: "center",
   },
   
   successButtonText: {
-    color: "#fff",
+    color: "rgba(14, 24, 40, 1)",
     fontSize: 17,
     fontWeight: "500",
     fontFamily: "Montserrat",
@@ -1251,4 +1269,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 10,
   },
+  
 });

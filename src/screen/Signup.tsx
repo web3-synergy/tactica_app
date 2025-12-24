@@ -15,6 +15,7 @@ import { auth, db } from "../config/firebase";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function SignupScreen({ navigation }: any) {
   const [step, setStep] = useState(1);
@@ -28,6 +29,7 @@ export default function SignupScreen({ navigation }: any) {
   const [code, setCode] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const inputRefs = useRef([]);
 
@@ -126,7 +128,10 @@ alert("Cuenta creada!");
       return (
         <>
           <Text style={styles.subtitle}>Ingresa tu correo electrónico</Text>
-          <View style={styles.inputContainer}>
+          <View style={[
+    styles.inputContainer,
+    { borderColor: isFocused ? "rgba(194, 212, 48, 1)" : "rgba(99, 107, 112, 1)" },
+  ]}>
             <Image
               source={require("../assets/email2.png")}
               style={styles.socialIcon}
@@ -139,6 +144,8 @@ alert("Cuenta creada!");
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
             />
           </View>
         </>
@@ -336,7 +343,18 @@ if (step === 4)
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#000" }}>
+      <LinearGradient
+                      colors={["rgba(14, 24, 40, 1)", "rgba(4, 5, 6, 1)"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 0, y: 1 }}
+                      
+                      style={StyleSheet.absoluteFillObject}
+                    >
+                      <ScrollView 
+                          contentContainerStyle={styles.container}
+                          keyboardShouldPersistTaps="handled"
+                        >
       <TouchableOpacity
   style={styles.closeButton}
   onPress={() => {
@@ -348,9 +366,9 @@ if (step === 4)
   }}
 >
   {step === 1 ? (
-    <Ionicons name="close" size={29} color="#000" />
+    <Ionicons name="close" size={29} color="rgba(255, 255, 255, 1)" />
   ) : (
-    <Ionicons name="arrow-back" size={29} color="#000" />
+    <Ionicons name="arrow-back" size={29} color="rgba(255, 255, 255, 1)" />
   )}
 </TouchableOpacity>
 
@@ -383,17 +401,19 @@ if (step === 4)
     {loading ? "Cargando..." : "Continuar"}
   </Text>
 </TouchableOpacity>
+</ScrollView>
+</LinearGradient>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", padding: 16, backgroundColor: "#FFF", gap: 24, },
-  title: { fontSize: 22, fontWeight: "600",  },
-  subtitle: { fontSize: 16, color: "#636B70", marginBottom: 10, textAlign: "center" },
+  container: { flex: 1, alignItems: "center", padding: 16, backgroundColor: "transparent", gap: 24, },
+  title: { fontSize: 22, fontWeight: "600",color: "rgba(255, 255, 255, 1)"  },
+  subtitle: { fontSize: 16, color: "rgba(100, 107, 128, 1)", marginBottom: 10, textAlign: "center" },
   button: { width: "90%", height: 42, borderRadius: 6,  justifyContent: "center", alignItems: "center",   },
   buttonText: { color: "#FFF", fontWeight: "600", fontSize: 16, },
-  followIcon: { marginTop: 70, fontSize: 40, },
+  followIcon: { marginTop: 70, fontSize: 40,color: "rgba(194, 212, 48, 1)" },
   closeButton: {
     position: "absolute",
     top: 120,
@@ -405,8 +425,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "90%",
     minHeight: 48,
-    backgroundColor: "#FFF",
-    borderColor: "#636B70",
+    backgroundColor: "rgba(100, 107, 128, 0.2)",
+    borderColor: "rgba(99, 107, 112, 1)",
     borderWidth: 0.6,
     borderRadius: 6,
     paddingHorizontal: 12,
@@ -418,7 +438,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: "500",
-    color: "#000",
+    color: "rgba(255, 255, 255, 1)",
   },
   codeContainer: {
     flexDirection: "row",
@@ -441,10 +461,10 @@ const styles = StyleSheet.create({
   
   
   buttonActive: {
-    backgroundColor: "#000", 
+    backgroundColor: "rgba(194, 212, 48, 1)", 
   },
   
   buttonDisabled: {
-    backgroundColor: "rgba(0,0,0,0.2)", 
+    backgroundColor: "rgba(194, 212, 48, 1)", 
   },
 });

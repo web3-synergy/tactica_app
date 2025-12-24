@@ -98,7 +98,7 @@ export default function ProfileScreen() {
 
         {/* HISTORY ITEMS */}
         {loading ? (
-          <ActivityIndicator size="large" color="#8AB1FF" />
+          <ActivityIndicator size="large" color="rgba(194, 212, 48, 1)" />
         ) : matches.length === 0 ? (
           <Text style={{ color: "white", textAlign: "center", marginTop: 20 }}>
             No hay partidos reservados
@@ -158,7 +158,7 @@ function HistoryItem({ n, name, date, dark }: HistoryItemProps) {
 /* ---------------- STYLES ---------------- */
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "rgba(48, 48, 48, 1)" },
+  container: { flex: 1, backgroundColor: "rgba(13, 25, 40, 1)" },
   scrollContent: { paddingBottom: 40 },
   header: {
     width: "100%",
@@ -167,33 +167,33 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0.04)",
     paddingTop: 50,
   },
-  title: { color: "#24281B", fontSize: 22, fontWeight: "700" },
-  editBtn: { paddingHorizontal: 10, paddingVertical: 6, backgroundColor: "black", borderRadius: 4 },
+  title: { color: "white", fontSize: 22, fontWeight: "700" },
+  editBtn: { paddingHorizontal: 10, paddingVertical: 6, backgroundColor: "rgba(100, 107, 128, 0.2)", borderRadius: 4 },
   editText: { color: "white", fontSize: 14, fontWeight: "500" },
-  topSection: { width: "100%", backgroundColor: "white", alignItems: "center", paddingTop: 16, paddingBottom: 20, gap: 12 },
+  topSection: { width: "100%", backgroundColor: "transparent", alignItems: "center", paddingTop: 16, paddingBottom: 20, gap: 12 },
   avatar: { width: 120, height: 120, borderRadius: 120 },
   nameBlock: { alignItems: "center", gap: 4 },
-  name: { fontSize: 22, fontWeight: "600", color: "black" },
-  nickname: { fontSize: 17, color: "black" },
-  memberSince: { fontSize: 12, fontWeight: "600", color: "rgba(0,0,0,0.40)" },
+  name: { fontSize: 22, fontWeight: "600", color: "rgba(255, 255, 255, 1)" },
+  nickname: { fontSize: 17, color: "rgba(255, 255, 255, 1)" },
+  memberSince: { fontSize: 12, fontWeight: "600", color: "rgba(194, 212, 48, 1)" },
   statsRow: { flexDirection: "row", width: "100%", justifyContent: "center" },
   statItem: { flex: 1, paddingVertical: 8, alignItems: "center", gap: 4 },
   statDivider: { borderRightWidth: 1, borderColor: "#A6A6A6" },
-  statLabel: { fontSize: 14, fontWeight: "700", color: "black" },
-  statValue: { fontSize: 12, color: "black" },
-  historySection: { width: "100%", padding: 16, backgroundColor: "rgba(48, 48, 48, 1)" },
+  statLabel: { fontSize: 14, fontWeight: "700", color: "rgba(255, 255, 255, 1)" },
+  statValue: { fontSize: 12, color: "rgba(255, 255, 255, 1)" },
+  historySection: { width: "100%", padding: 16, backgroundColor: "transparent" },
   historyHeader: { marginBottom: 12, flexDirection: "row", justifyContent: "space-between" },
-  historyTitle: { color: "#8AB1FF", fontSize: 16, fontWeight: "600" },
+  historyTitle: { color: "rgba(194, 212, 48, 1)", fontSize: 16, fontWeight: "600" },
   paymentTitle: { color: "white", fontSize: 16, fontWeight: "600" },
-  filterRow: { padding: 6, backgroundColor: "black", borderRadius: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
+  filterRow: { padding: 6, backgroundColor: "rgba(100, 107, 128, 1)", borderRadius: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
   filterLeft: { flexDirection: "row", alignItems: "center", gap: 8 },
   filterDot: { width: 18, height: 18 },
   filterLabel: { color: "white", fontSize: 14, fontWeight: "600" },
-  historyItem: { padding: 6, borderRadius: 4, flexDirection: "row", alignItems: "center", marginBottom: 6 },
-  historyItemDark: { backgroundColor: "rgba(255,255,255,0.08)" },
+  historyItem: { padding: 6, borderRadius: 4, flexDirection: "row", alignItems: "center", marginBottom: 6, backgroundColor: "transparent" },
+  historyItemDark: { backgroundColor: "rgba(100, 107, 128, 0.2)" },
   historyIndex: { width: 30, fontSize: 17, color: "white", fontWeight: "600" },
   historyLeft: { flex: 1, flexDirection: "row", alignItems: "center", gap: 6 },
   historyIcon: { width: 24, height: 24 },

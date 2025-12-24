@@ -42,7 +42,7 @@ export default function BottomTabs() {
   const icons = {
     "Inicio": require("../assets/home.png"),
     "Perfil": require("../assets/profile.png"),
-    "Mis Juegos": require("../assets/game.png"),
+    "Juegos": require("../assets/game.png"),
     "Equipo": require("../assets/team.png"),
     "Menu": require("../assets/menu.png"),
   };
@@ -53,15 +53,16 @@ export default function BottomTabs() {
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: "rgba(0, 0, 0, 0.8)",
-            borderTopWidth: 0,
+            backgroundColor: "rgba(13, 25, 40, 1)",
+            borderTopWidth: 1,
+            borderTopColor: "rgba(194, 212, 48, 1)", 
             elevation: 0,
             height: 96,
           },
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "rgba(159, 162, 175, 1)",
+          tabBarActiveTintColor: "rgba(194, 212, 48, 1)",
+          tabBarInactiveTintColor: "rgba(100, 107, 128, 1)",
           tabBarIcon: ({ color, size }) => {
-            if (route.name === "Mis Juegos") {
+            if (route.name === "Juegos") {
               return (
                 <View style={{ width: 30, height: 30, alignItems: "center", justifyContent: "center" }}>
                   <Image
@@ -71,9 +72,9 @@ export default function BottomTabs() {
                   {gamesCount > 0 && (
                     <View style={{
                       position: 'absolute',
-                      left: -5,
-                      top: 9,
-                      backgroundColor: '#42C772',
+                      left: -9,
+                      top: 10,
+                      backgroundColor: 'rgba(194, 212, 48, 1)',
                       borderRadius: 12,
                       paddingHorizontal: 5,
                       paddingVertical: 2.5,
@@ -82,7 +83,7 @@ export default function BottomTabs() {
                       justifyContent: 'center',
                     }}>
                       <Text style={{
-                        color: '#040404',
+                        color: 'rgba(14, 24, 40, 1)',
                         fontSize: 12,
                         fontWeight: '600',
                         textAlign: 'center',
@@ -100,7 +101,7 @@ export default function BottomTabs() {
       >
         <Tab.Screen name="Inicio" component={HomeScreen} />
         <Tab.Screen name="Perfil" component={ProfileScreen} />
-        <Tab.Screen name="Mis Juegos" component={Games} />
+        <Tab.Screen name="Juegos" component={Games} />
         <Tab.Screen name="Equipo" component={Team} />
         <Tab.Screen
           name="Menu"
