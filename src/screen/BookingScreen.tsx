@@ -73,6 +73,18 @@ const [successVisible, setSuccessVisible] = useState(false);
       useNativeDriver: false,
     }).start();
   };
+  const getCategoryColor = (category?: string) => {
+    if (!category) return "#9CA3AF";
+  
+    switch (category.toLowerCase()) {
+      case "Versus":
+        return "rgba(7, 146, 173, 1)";
+      case "individual":
+        return "rgba(250, 211, 1, 1)";
+      default:
+        return "rgba(7, 146, 173, 1)";
+    }
+  };
 
   const knobPosition = toggleAnim.interpolate({
     inputRange: [0, 1],
@@ -321,8 +333,8 @@ if (data.status !== "active" || expireAt < now) {
 {/* Info Row */}
 <View style={styles.infoRow}>
   <View style={styles.infoItem}>
-    <Image source={require("../assets/femedal.png")} style={styles.infoIcons} />
-    <Text style={styles.infoTexts}>{market.category ?? "Individual"}</Text>
+    <Image source={require("../assets/femedal.png")} style={[styles.infoIcons, { tintColor: getCategoryColor(market.category)}]} />
+    <Text style={[styles.infoTexts, { color: getCategoryColor(market.category)}]}>{market.category ?? "Individual"}</Text>
   </View>
   <View style={styles.infoItem}>
     <Image source={require("../assets/soccers.png")} style={styles.infoIcon} />
@@ -394,7 +406,7 @@ if (data.status !== "active" || expireAt < now) {
             borderColor:  selected ? "" : "rgba(255, 255, 255, 1)",
             justifyContent: "center",
             alignItems: "center",
-            minWidth: 60,
+            minWidth: 104,
           }}
           onPress={() => handleSelectTime(t.time, selKey)}
           activeOpacity={0.8}
@@ -713,7 +725,7 @@ const styles = StyleSheet.create({
   descriptionText: { color: "rgba(255, 255, 255, 1)" },
 
   sectionHeader: { paddingHorizontal: 16, paddingVertical: 8 },
-  sectionTitle: { fontSize: 16, fontWeight: "700" },
+  sectionTitle: { fontSize: 20, fontWeight: "700", color:"rgba(255, 255, 255, 1)" },
 
   schedulesContainer: { flex: 1, paddingHorizontal: 8 },
   scheduleBlock: { marginBottom: 12 },

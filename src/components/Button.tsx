@@ -58,6 +58,12 @@ export default function BottomTabs() {
             borderTopColor: "rgba(194, 212, 48, 1)", 
             elevation: 0,
             height: 96,
+            
+          },
+          tabBarLabelStyle: {
+            fontSize: 14,
+            fontWeight: "600",
+            marginTop: 4,
           },
           tabBarActiveTintColor: "rgba(194, 212, 48, 1)",
           tabBarInactiveTintColor: "rgba(100, 107, 128, 1)",
@@ -111,21 +117,21 @@ export default function BottomTabs() {
               <TouchableOpacity
                 {...props}
                 onPress={() => setMenuOpen(true)}
-                style={{ alignItems: "center", justifyContent: "center", marginTop: 5 }}
+                style={{ alignItems: "center", justifyContent: "center", marginTop: 10 }}
               >
                 <Image
                   source={icons["Menu"]}
                   style={{
                     width: 22,
                     height: 22,
-                    tintColor: props.accessibilityState?.selected ? "white" : "rgba(159,162,175,1)",
+                    tintColor: "rgba(159,162,175,1)",
                   }}
                 />
                 <Text
                   style={{
-                    color: props.accessibilityState?.selected ? "white" : "rgba(159,162,175,1)",
-                    fontSize: 12,
-                    marginTop: 2,
+                    color: "rgba(100, 107, 128, 1)",
+                    fontSize: 14,
+                    marginTop: 5,
                   }}
                 >
                   Menu

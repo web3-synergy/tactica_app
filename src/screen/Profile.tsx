@@ -147,7 +147,7 @@ function HistoryItem({ n, name, date, dark }: HistoryItemProps) {
     <View style={[styles.historyItem, dark && styles.historyItemDark]}>
       <Text style={styles.historyIndex}>{n}</Text>
       <View style={styles.historyLeft}>
-        <Image source={require("../assets/Vector4.png")} style={styles.historyIcon} />
+        <Image source={require("../assets/vector5.png")} style={styles.historyIcon} />
         <Text style={styles.historyName}>{name}</Text>
       </View>
       <Text style={styles.historyDate}>{date}</Text>

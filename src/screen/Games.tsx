@@ -225,7 +225,7 @@ export default function Game() {
   if (loading) {  
     return (  
       <View style={styles.loader}>  
-        <ActivityIndicator size="large" />  
+        <ActivityIndicator size="large" color="rgba(194, 212, 48, 1)" />  
       </View>  
     );  
   }  
@@ -271,7 +271,7 @@ export default function Game() {
 }  
 
 const styles = StyleSheet.create({  
-  loader: { flex: 1, justifyContent: "center", alignItems: "center" },  
+  loader: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(13, 25, 40, 1)" },  
   empty: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20 },  
   emptyText: { color: "#666", fontSize: 16, marginBottom: 12 },  
   reloadBtn: { backgroundColor: "#111", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },  

@@ -209,7 +209,7 @@ export default function Team() {
         style={{ flex: 1 }}
       >
         <ScrollView
-          contentContainerStyle={{ alignItems: "center", gap: 24, paddingBottom: 40 }}
+          contentContainerStyle={{ gap: 24, paddingBottom: 40 }}
         >
           <Text style={styles.dashboardTitle}>Plantilla Equipo</Text>
 
@@ -241,32 +241,63 @@ export default function Team() {
               style={[styles.playerRow, { padding: 8, justifyContent: "center" }]}
               onPress={() => navigation.navigate("AddPlayer", { teamId: selectedTeam.id })}
             >
-              <Text style={{ color: "rgba(255, 255, 255, 1)", fontWeight: "600" }}>+ Jugador</Text>
+              <Image source={require("../assets/add.png")}  style={styles.add}/>
+              <Text style={{ color: "rgba(255, 255, 255, 1)", fontWeight: "600", }}>Jugador</Text>
             </TouchableOpacity>
           </View>
 
-          <View style={{ alignItems: "center", gap: 1}}>
-            {players.map(player => (
-              <View key={player.uid} style={styles.playerRows}>
-                <Image source={require("../assets/skill.png")} style={styles.playerAvatar} />
-                <View style={{ flex: 1, marginLeft: 12 }}>
-                  <Text style={[styles.playerName, { color: "rgba(255, 255, 255, 1)" }]}>
-                    {player.name || "Sin nombre"}
-                  </Text>
-                  <Text style={styles.playerRole}>
-                    {player.isOwner 
-                      ? "Dueño" 
-                      : player.position 
-                        ? player.position.charAt(0).toUpperCase() + player.position.slice(1).toLowerCase()
-                        : "Jugador"}
-                  </Text>
-                </View>
-                <Text style={styles.playerAge}>
-                  {player.dob ? new Date().getFullYear() - new Date(player.dob).getFullYear() : "-"}
-                </Text>
-              </View>
-            ))}
-          </View>
+          <View style={{ alignItems: "center", gap: 1 }}>
+  {players.map((player, index) => {
+    const isEven = index % 2 === 0;
+
+    return (
+      <View
+        key={player.uid}
+        style={[
+          styles.playerRows,
+          isEven ? styles.evenRow : styles.oddRow,
+        ]}
+      >
+        <Image
+          source={require("../assets/skill.png")}
+          style={styles.playerAvatar}
+        />
+
+        <View style={{ flex: 1, marginLeft: 12 }}>
+          <Text style={styles.playerName}>
+            {player.name || "Sin nombre"}
+          </Text>
+
+          <Text style={styles.playerRole}>
+            {player.isOwner
+              ? "Dueño"
+              : player.position
+              ? player.position.charAt(0).toUpperCase() +
+                player.position.slice(1).toLowerCase()
+              : "Jugador"}
+          </Text>
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.rowtext}>Edad</Text>
+          <Text style={styles.playerAge}>
+            {player.dob
+              ? new Date().getFullYear() -
+                new Date(player.dob).getFullYear()
+              : "25"}
+          </Text>
+        </View>
+
+        <TouchableOpacity>
+          <Image
+            source={require("../assets/dot.png")}
+            style={styles.dot}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  })}
+</View>
         </ScrollView>
       </LinearGradient>
     );
@@ -473,11 +504,14 @@ const styles = StyleSheet.create({
   // Dashboard Styles
   dashboardTitle: {
     fontSize: 22,
-    fontWeight: "600",
+    fontWeight: "700",
     color: "#fff",
     textAlign: "left",
     marginVertical: 24,
     paddingTop: 60,
+    paddingLeft: 20,
+    letterSpacing: -0.02,
+    
   },
   teamInfoRow: {
     width: "100%",
@@ -530,6 +564,7 @@ const styles = StyleSheet.create({
   playerName: {
     fontSize: 14,
     fontWeight: "700",
+    color: "rgba(255, 255, 255, 1)",
   },
   playerRole: {
     fontSize: 12,
@@ -548,5 +583,21 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     padding: 12,
    
+  },
+  row: {
+    flexDirection: "column",
+    paddingRight: 20,
+  },
+  rowtext: {
+    color: "rgba(255, 255, 255, 1)",
+  },
+  add : {
+    alignItems: "center",
+  },
+  evenRow: {
+    backgroundColor:  "transparent",
+  },
+  oddRow: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
 });

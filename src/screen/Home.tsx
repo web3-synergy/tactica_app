@@ -309,7 +309,7 @@ export default function HomeScreen() {
 
                   {/* MARKET INFO */}
                   <View style={styles.marketInfo}>
-                    <Image source={m.image ? { uri: m.image } : require("../assets/email.png")} style={styles.image} />
+                    <Image source={m.image ?? require("../assets/ball.png")} style={styles.image} />
                     <View style={styles.infoText}>
                     <View style={styles.titleRow}>
   <Text style={[styles.title, ]}>{m.address}</Text>
@@ -400,7 +400,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   
   container: { flex: 1,  },
-  title: { fontSize: 22, fontWeight: "700", marginBottom: 12, color: "rgba(255, 255, 255, 1)" },
+  title: { fontSize: 16, fontWeight: "700", marginBottom: 12, color: "rgba(255, 255, 255, 1)", width: "80%" },
   monthText: { marginRight: 18, fontSize: 15, marginTop: 15, gap: 4, },
   
   weekdaysRow: { flexDirection: "row", justifyContent: "space-between", marginHorizontal: 20, marginTop: 8 },
@@ -413,14 +413,14 @@ const styles = StyleSheet.create({
   cuposText: { color: "rgba(255, 255, 255, 1)", fontSize: 10,fontWeight: "500"},
 
   /* CARD STYLES */
-  card: { width: 362,height: 222,backgroundColor: "rgba(100, 107, 128, 0.2)", borderRadius: 8,  marginBottom: 12, alignSelf: "center", shadowColor: "rgba(0, 0, 0, 0.08)", shadowOpacity: 0.08, shadowOffset: { width: 0, height: 4 }, shadowRadius: 4, elevation: 2,paddingHorizontal: 12,paddingVertical: 10,borderColor: "rgba(100, 107, 128, 1)", borderWidth: 0.4,  },
+  card: { width: 362, maxHeight: "90%", minHeight: 206,backgroundColor: "rgba(100, 107, 128, 0.2)", borderRadius: 8,  marginBottom: 12, alignSelf: "center", shadowColor: "rgba(0, 0, 0, 0.08)", shadowOpacity: 0.08, shadowOffset: { width: 0, height: 4 }, shadowRadius: 4, elevation: 2,paddingHorizontal: 12,paddingVertical: 10,borderColor: "rgba(100, 107, 128, 1)", borderWidth: 0.4,  },
   dateRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 6 },
   dateText: { color: "rgba(255, 255, 255, 1)", fontSize: 14, fontWeight: "500" },
   formatBox: { paddingHorizontal: 4,  borderRadius: 2, borderWidth: 0.6, borderColor: "rgba(250, 211, 1, 1)", justifyContent: "center", alignItems: "center", height: 24 },
   inbox: { paddingHorizontal: 4,  borderRadius: 4, borderWidth: 0.6, justifyContent: "center", alignItems: "center" },
   formatText: { color: "rgba(250, 211, 1, 1)", fontSize: 14, fontWeight: "500" },
   marketInfo: { flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 6 },
-  image: { width: 40, height: 40, borderRadius: 5, backgroundColor: "#D9D9D9" },
+  image: { width: 40, height: 40, borderRadius: 5,backgroundColor: "#D9D9D9"  },
   infoText: { flex: 1, flexDirection: "column", gap: 4 },
   titleRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 },
   
