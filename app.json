@@ -9,12 +9,12 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-  "supportsTablet": true,
-  "bundleIdentifier": "com.yourname.tacticaa",
-  "infoPlist": {
-    "NSCalendarsUsageDescription": "We need access to your calendar to schedule players"
-  }
-},
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourname.tacticaa",
+      "infoPlist": {
+        "NSCalendarsUsageDescription": "We need access to your calendar to schedule players"
+      }
+    },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
@@ -42,7 +42,8 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

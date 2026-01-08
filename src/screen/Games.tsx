@@ -25,6 +25,22 @@ export default function Game() {
   const navigation = useNavigation(); 
   const user = auth.currentUser;
 
+  // Symbol and shape mappings for team logos
+const symbolsData = [
+  { id: 1, uri: require("../assets/ball.png") },
+  { id: 2, uri: require("../assets/medal.png") },
+  { id: 3, uri: require("../assets/Vector3.png") },
+  { id: 4, uri: require("../assets/soccer.png") },
+  { id: 5, uri: require("../assets/trophy.png") },
+  { id: 6, uri: require("../assets/gloves.png") },
+];
+
+const shapesData = [
+  { id: 1, uri: require("../assets/circle.png") },
+  { id: 2, uri: require("../assets/Vector.png") },
+  { id: 3, uri: require("../assets/Vector1.png") },
+];
+
   useEffect(() => {  
     
       const q = query(
@@ -70,6 +86,7 @@ export default function Game() {
     }  
   }, []);  
   // fallback to 1 if undefined
+  
   const renderItem = ({ item }) => {  
     const dateStr = item.date
     ? new Date(item.date).toLocaleDateString("en-GB", { 
@@ -217,6 +234,26 @@ export default function Game() {
   </View>
 </View>
       </View>  
+      {/*{market?.category?.toLowerCase() === "equipos" && userTeam && (
+                <View style={styles.teamsContainer}>
+                  
+                  <View style={styles.teamsLogos}>
+                    <View style={styles.teamLogoWrapper}>
+                      <View style={[styles.teamLogoContainer, { backgroundColor: userTeam.color }]}>
+                        <Image 
+                          source={shapesData[userTeam.shape - 1]?.uri} 
+                          style={styles.teamShape}
+                        />
+                        <Image 
+                          source={symbolsData[userTeam.symbol - 1]?.uri} 
+                          style={styles.teamSymbol}
+                        />
+                      </View>
+                      <Text style={styles.teamName}>{userTeam.name}</Text>
+                    </View>
+                  </View>
+                </View>
+              )}*/}
       
       </View> 
     );  
@@ -247,7 +284,7 @@ export default function Game() {
                         colors={["#0E1828", "#040506"]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 0, y: 1 }}
-                        style={styles.gradient}
+                        style={StyleSheet.absoluteFillObject}
                       >
       {/* Fixed header at top */}  
       <View style={styles.header}>  
